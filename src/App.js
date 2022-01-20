@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <form>
+                <label htmlFor="search">Search your pokemon</label>
+                <input type="text" id="search" />
+                <button type="submit">Search</button>
+            </form>
+
+            {/* LOADING */}
+            <div>Loading...</div>
+
+            {/* POKEMON FOUND */}
+            <div>
+                <span>Charmander</span>
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" />
+            </div>
+
+            {/* ERROR */}
+            <div>Oops... something went wrong.</div>
+        </div>
+    );
 }
 
 export default App;
