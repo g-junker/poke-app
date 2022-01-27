@@ -1,12 +1,22 @@
+import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    function searchFormSubmitted(e) {
+        e.preventDefault();
+        fetch(`https://pokeapi.co/api/v2/pokemon/${searchTerm}`)
+            .then((response) => response.json())
+            .then((data) => console.log(data));
+    }
+
     return (
         <div className="App">
-            <form>
+            <form onSubmit={searchFormSubmitted}>
                 <label htmlFor="search">Search your pokemon</label>
-                <input type="text" id="search" />
+                <input type="text" id="search" value={searchTerm} onInput={(e) => setSearchTerm(e.target.value)} />
                 <button type="submit">Search</button>
             </form>
 
