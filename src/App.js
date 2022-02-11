@@ -1,33 +1,43 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
-function App() {
-    const [searchTerm, setSearchTerm] = useState("");
+function usePokemon() {
     const [isLoading, setIsLoading] = useState(false);
     const [pokemon, setPokemon] = useState(null);
-    const [hasError, setHasError] = useState(false);
+    const [hasError, setHasError] = useState(null);
 
-    function searchFormSubmitted(e) {
-        e.preventDefault();
-
+    function search(searchTerm = "") {
         if (!searchTerm) return;
 
-        setHasError(false);
+        setHasError(null);
         setPokemon(null);
         setIsLoading(true);
-        fetch(`https://pokeapi.co/api/v2/pokemon/${searchTerm}`)
+
+        return fetch(`https://pokeapi.co/api/v2/pokemon/${searchTerm}`)
             .then((response) => response.json())
             .then((data) => {
                 setPokemon(data);
-                setSearchTerm("");
+                return Promise.resolve(data);
             })
             .catch((error) => {
-                setHasError(true);
+                setHasError(error.message);
+                return Promise.reject(error);
             })
             .finally(() => {
                 setIsLoading(false);
             });
+    }
+
+    return { pokemon, isLoading, hasError, search };
+}
+
+function App() {
+    const [searchTerm, setSearchTerm] = useState("");
+    const { pokemon, isLoading, hasError, search } = usePokemon();
+
+    function searchFormSubmitted(e) {
+        e.preventDefault();
+        search(searchTerm).then(() => setSearchTerm(""));
     }
 
     return (
@@ -45,7 +55,7 @@ function App() {
                     <img src={pokemon.sprites.front_default} />
                 </div>
             )}
-            {hasError && <div>Oops... something went wrong.</div>}
+            {hasError && <div>Oops... something went wrong. {hasError}</div>}
         </div>
     );
 }
